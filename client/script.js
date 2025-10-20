@@ -58,16 +58,16 @@ function renderWishlist(items) {
       // Usuário normal
       if (item.status === "disponivel") {
         actionButtons = `
-          <button onclick="updateItem(${item.id}, 'reservado')">Reservar</button>
-          <button onclick="updateItem(${item.id}, 'comprado')">Comprar</button>
+          <button class="warning" onclick="updateItem(${item.id}, 'reservado')">Reservar</button>
+          <button class="good" onclick="updateItem(${item.id}, 'comprado')">Comprar</button>
         `;
       } else if (item.status === "reservado") {
         actionButtons = `
-          <button onclick="updateItem(${item.id}, 'comprado')">Marcar Comprado</button>
-          <button onclick="updateItem(${item.id}, 'disponivel')">Libertar</button>
+          <button class="good" onclick="updateItem(${item.id}, 'comprado')">Comprado</button>
+          <button class="danger" onclick="updateItem(${item.id}, 'disponivel')">Cancelar</button>
         `;
       } else if (item.status === "comprado") {
-        actionButtons = `<button onclick="updateItem(${item.id}, 'disponivel')">Libertar</button>`;
+        actionButtons = `<button class="danger" onclick="updateItem(${item.id}, 'disponivel')">Cancelar</button>`;
       }
     }
 
@@ -111,6 +111,17 @@ async function updateItem(id, status) {
         message: "É necessário indicar o nome para reservar ou comprar.",
       });
       return;
+    }
+  } else if (status === "disponivel") {
+    const confirmed = await showModal({
+      title: "Cancelar Ação",
+      message: "Tem certeza que deseja cancelar esta reserva ou compra?",
+      requireInput: false,
+      showCancel: true,
+    });
+
+    if (!confirmed) {
+      return; // Exit if the user cancels the confirmation
     }
   }
 

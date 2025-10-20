@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "../client")));
 
 const DB_PATH = path.join(__dirname, "../db/db.json");
-
+const PORT = process.env.PORT || 8080;
 
 const ADMIN_USER = process.env.ADMIN_USER;
 const ADMIN_PASS = process.env.ADMIN_PASS;
@@ -146,6 +146,6 @@ app.delete("/wishlist/:id", isAdmin, (req, res) => {
   res.json({ message: "Item removido" });
 });
 
-app.listen(3000, () =>
-  console.log("Servidor a correr em http://localhost:3000")
-);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
