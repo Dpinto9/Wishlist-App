@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wishlist do Bebé - Raquel</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="shortcut icon" href="assets/Babyicon.svg" type="image/x-icon" />
+  </head>
+  <body>
+    <header>
+      <h1>Cantinho de Mimos</h1>
+      <div class="header-actions">
+        <button id="adminToggle" title="Modo Admin"></button>
+      </div>
+    </header>
+
+    <section id="adminPanel" class="hidden">
+      <h2>Adicionar Item</h2>
+      <div class="form">
+        <input id="itemName" placeholder="Nome do item" />
+        <input id="itemLink" placeholder="URL do produto" />
+        <input id="itemPrice" placeholder="Preço (€)" />
+        <input id="itemImage" placeholder="URL da imagem" />
+        <button id="addItemBtn">Adicionar</button>
+      </div>
+    </section>
+
+    <main>
+      <div id="wishlist" class="grid"></div>
+    </main>
+
+    <footer>
+      <p>
+        Desenvolvido com 💕 por
+        <a
+          href="https://www.linkedin.com/in/diogo-pinto-4ab865278/"
+          target="_blank"
+        >
+          DPINTO
+        </a>
+      </p>
+    </footer>
+
+    <div id="modalOverlay" class="modal-overlay hidden">
+      <div class="modal">
+        <h3 id="modalTitle"></h3>
+        <p id="modalMessage"></p>
+        <input id="modalInput" type="text" placeholder="" class="hidden" />
+        <div class="modal-buttons">
+          <button id="modalCancel">Cancelar</button>
+          <button id="modalConfirm">Confirmar</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
