@@ -1,7 +1,20 @@
 const wishlistEl = document.getElementById("wishlist");
 const adminToggle = document.getElementById("adminToggle");
 const adminPanel = document.getElementById("adminPanel");
+const wishlistProgress = document.getElementById("wishlistProgress");
 const addItemBtn = document.getElementById("addItemBtn");
+const filterStatus = document.getElementById("filterStatus");
+const filterReservedBy = document.getElementById("filterReservedBy");
+const sortBy = document.getElementById("sortBy");
+const order = document.getElementById("order");
+const applyFilters = document.getElementById("applyFilters");
+const resetFilters = document.getElementById("resetFilters");
+const toggleBtn = document.getElementById("toggleViewBtn");
+const progressTotals = document.getElementById("progressTotals");
+const progressReservado = document.querySelector(".progress-reservado");
+const progressComprado = document.querySelector(".progress-comprado");
+
+let currentFilters = {};
 
 let token = localStorage.getItem("adminToken") || null;
 
@@ -27,9 +40,21 @@ async function logout() {
 
 // 📦 Carregar lista
 async function loadWishlist() {
-  const res = await fetch("/wishlist");
+  const params = new URLSearchParams();
+
+  if (currentFilters.status) params.append("status", currentFilters.status);
+  if (currentFilters.reservedBy) params.append("reservedBy", currentFilters.reservedBy);
+  if (currentFilters.sortBy) params.append("sortBy", currentFilters.sortBy);
+  if (currentFilters.order) params.append("order", currentFilters.order);
+
+  const query = params.toString() ? `?${params.toString()}` : "";
+  const res = await fetch(`/wishlist${query}`);
   const data = await res.json();
   renderWishlist(data);
+  
+  if (token) {
+    await updateProgressBar();
+  }
 }
 
 // 🎨 Renderizar os cards com a NOVA estrutura melhorada
@@ -88,7 +113,7 @@ function renderWishlist(items) {
         </div>
       </div>
     `;
-    
+
     wishlistEl.appendChild(card);
   });
 }
@@ -168,6 +193,7 @@ async function deleteItem(id) {
       message: "Item apagado com sucesso!",
     });
     loadWishlist();
+    await updateProgressBar();
   } else {
     await showModal({
       title: "Erro",
@@ -200,8 +226,10 @@ adminToggle.addEventListener("click", async () => {
     try {
       await login(user, pass);
       adminPanel.classList.remove("hidden");
+      wishlistProgress.classList.remove("hidden");
       adminToggle.classList.add("active");
       loadWishlist();
+      updateProgressBar();
     } catch {
       await showModal({
         title: "Erro",
@@ -211,6 +239,7 @@ adminToggle.addEventListener("click", async () => {
   } else {
     await logout();
     adminPanel.classList.add("hidden");
+    wishlistProgress.classList.add("hidden");
     adminToggle.classList.remove("active");
     loadWishlist();
   }
@@ -261,6 +290,25 @@ addItemBtn.addEventListener("click", async () => {
   loadWishlist();
 });
 
+applyFilters.addEventListener("click", () => {
+  currentFilters = {
+    status: filterStatus.value,
+    reservedBy: filterReservedBy.value.trim(),
+    sortBy: sortBy.value,
+    order: order.value,
+  };
+  loadWishlist();
+});
+
+resetFilters.addEventListener("click", () => {
+  filterStatus.value = "";
+  filterReservedBy.value = "";
+  sortBy.value = "";
+  order.value = "asc";
+  currentFilters = {};
+  loadWishlist();
+});
+
 // Se o admin já estiver logado
 if (token) {
   adminPanel.classList.remove("hidden");
@@ -285,7 +333,7 @@ function showModal({
 
     modalTitle.textContent = title;
     modalMessage.textContent = message;
-    
+
     if (requireInput) {
       modalInput.classList.remove("hidden");
       modalInput.value = "";
@@ -312,8 +360,91 @@ function showModal({
       const val = requireInput ? modalInput.value.trim() : true;
       closeModal(val || null);
     };
-    
+
     cancelBtn.onclick = () => closeModal(null);
+  });
+}
+
+// Define progressMode at the top
+let progressMode = 'money'; // Default to money mode
+
+async function updateProgressBar() {
+  const response = await fetch("/wishlist");
+  const items = await response.json();
+
+  let total = 0;
+  let disponivel = 0;
+  let reservado = 0;
+  let comprado = 0;
+
+  // Calculate totals based on current mode
+  items.forEach((item) => {
+    const price = parseFloat(item.price) || 0;
+    if (progressMode === "money") {
+      total += price;
+      if (item.status === "disponivel") disponivel += price;
+      else if (item.status === "reservado") reservado += price;
+      else if (item.status === "comprado") comprado += price;
+    } else {
+      total++;
+      if (item.status === "disponivel") disponivel++;
+      else if (item.status === "reservado") reservado++;
+      else if (item.status === "comprado") comprado++;
+    }
+  });
+
+  // Calculate percentages
+  const compradoPct = total > 0 ? (comprado / total) * 100 : 0;
+  const reservadoPct = total > 0 ? (reservado / total) * 100 : 0;
+  const disponivelPct = total > 0 ? (disponivel / total) * 100 : 0;
+
+  // Update DOM elements
+  const progressContainer = document.querySelector("#wishlistProgress");
+  const progressComprado = document.querySelector(".progress-comprado");
+  const progressReservado = document.querySelector(".progress-reservado");
+  const progressDisponivel = document.querySelector(".progress-disponivel");
+  const progressTotals = document.querySelector("#progressTotals");
+
+  // Show the container
+  progressContainer.classList.remove("hidden");
+
+  // Update bar widths (stacked)
+  progressComprado.style.width = `${compradoPct}%`;
+  progressReservado.style.width = `${reservadoPct}%`;
+  progressDisponivel.style.width = `${disponivelPct}%`;
+
+  // Apply stacking by setting the left offset
+  progressComprado.style.left = `0%`;
+  progressReservado.style.left = `${compradoPct}%`;
+  progressDisponivel.style.left = `${compradoPct + reservadoPct}%`;
+
+  // Update text inside bars
+  if (progressMode === "money") {
+    progressComprado.innerHTML = compradoPct > 8 ? `<span>€${comprado.toFixed(2)}</span>` : '';
+    progressReservado.innerHTML = reservadoPct > 8 ? `<span>€${reservado.toFixed(2)}</span>` : '';
+    progressDisponivel.innerHTML = disponivelPct > 8 ? `<span>€${disponivel.toFixed(2)}</span>` : '';
+    progressTotals.textContent = `${items.length} itens • €${total.toFixed(2)} total`;
+  } else {
+    progressComprado.innerHTML = compradoPct > 8 ? `<span>${comprado} ${comprado === 1 ? 'item' : 'itens'}</span>` : '';
+    progressReservado.innerHTML = reservadoPct > 8 ? `<span>${reservado} ${reservado === 1 ? 'item' : 'itens'}</span>` : '';
+    progressDisponivel.innerHTML = disponivelPct > 8 ? `<span>${disponivel} ${disponivel === 1 ? 'item' : 'itens'}</span>` : '';
+    progressTotals.textContent = `${disponivel} disponíveis • ${reservado} reservados • ${comprado} comprados`;
+  }
+}
+
+// Toggle button event listener
+const toggleViewBtn = document.getElementById('toggleViewBtn');
+if (toggleViewBtn) {
+  toggleViewBtn.addEventListener('click', async () => {
+    // Toggle mode
+    progressMode = progressMode === 'money' ? 'units' : 'money';
+    
+    // Update button text and class
+    toggleViewBtn.textContent = progressMode === 'money' ? 'Ver em Unidades' : 'Ver em Dinheiro';
+    toggleViewBtn.classList.toggle('units-mode', progressMode === 'units');
+    
+    // Update the progress bar
+    await updateProgressBar();
   });
 }
 

@@ -107,7 +107,11 @@ header h1::before {
 }
 
 #adminToggle {
-  background: linear-gradient(135deg, var(--accent-pink) 0%, var(--accent-blue) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--accent-pink) 0%,
+    var(--accent-blue) 100%
+  );
   color: var(--white);
   border: none;
   width: 50px;
@@ -125,7 +129,7 @@ header h1::before {
 }
 
 #adminToggle::before {
-  content: '🔒';
+  content: "🔒";
   /* background: linear-gradient(135deg, var(--white) 0%, var(--white) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -136,7 +140,7 @@ header h1::before {
 }
 
 #adminToggle.active::before {
-  content: '🔓';
+  content: "🔓";
   /* background: linear-gradient(135deg, var(--white) 0%, var(--white) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -374,7 +378,7 @@ main {
 
 .danger:hover {
   background: rgba(255, 179, 186, 0.2) !important;
-  border-color: var(--danger)!important;
+  border-color: var(--danger) !important;
 }
 
 .good {
@@ -397,7 +401,7 @@ main {
 
 .warning:hover {
   background: rgba(255, 209, 154, 0.2) !important;
-  border-color: var(--warning)!important;
+  border-color: var(--warning) !important;
 }
 
 .card-link {
@@ -612,5 +616,402 @@ footer a:hover {
 
   .grid {
     grid-template-columns: 1fr;
+  }
+}
+
+.filters {
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 5px 20px var(--shadow);
+  border: 2px solid var(--accent-pink);
+  padding: 2rem;
+  margin: 0 auto;
+  max-width: 1000px;
+  position: relative;
+}
+
+.filters h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filters h2 svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--accent-pink);
+}
+
+.filter-controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 1rem;
+}
+
+.filter-group {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.filter-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0.8;
+}
+
+.filter-label svg {
+  width: 14px;
+  height: 14px;
+  fill: var(--accent-pink);
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  fill: var(--accent-pink);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.filter-controls select,
+.filter-controls input {
+  width: 100%;
+  padding: 12px 14px 12px 40px;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 179, 193, 0.3);
+  background: var(--white);
+  font-family: "Quicksand", sans-serif;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  color: var(--text-dark);
+  box-shadow: 0 2px 6px var(--shadow);
+  appearance: none;
+  cursor: pointer;
+}
+
+.filter-controls input {
+  cursor: text;
+}
+
+.filter-controls select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23ffb3c1' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+}
+
+.filter-controls select:focus,
+.filter-controls input:focus {
+  outline: none;
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(168, 216, 234, 0.2);
+}
+
+.filter-controls select:hover,
+.filter-controls input:hover {
+  border-color: var(--accent-pink);
+}
+
+.filter-actions {
+  display: flex;
+  gap: 12px;
+  grid-column: 1 / -1;
+  margin-top: 0.5rem;
+}
+
+.filter-actions button {
+  flex: 1;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 12px;
+  font-family: "Quicksand", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 10px var(--shadow);
+}
+
+.filter-actions button svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+#applyFilters {
+  background: linear-gradient(
+    135deg,
+    var(--accent-pink) 0%,
+    var(--accent-blue) 100%
+  );
+  color: var(--white);
+}
+
+#applyFilters:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 179, 193, 0.4);
+}
+
+#resetFilters {
+  background: rgba(93, 78, 96, 0.08);
+  color: var(--text-dark);
+}
+
+#resetFilters:hover {
+  background: rgba(93, 78, 96, 0.15);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .filter-controls {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    padding: 1.5rem;
+  }
+
+  .filter-actions {
+    flex-direction: column;
+  }
+}
+
+.progress-container {
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 5px 20px var(--shadow);
+  border: 2px solid var(--accent-pink);
+  padding: 2rem;
+  margin: 0 auto 2rem;
+  max-width: 900px;
+  position: relative;
+}
+
+.progress-container.hidden {
+  display: none;
+}
+
+.progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.progress-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+}
+
+#progressLabel {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#progressLabel::before {
+  content: "📊";
+  font-size: 1.3rem;
+}
+
+#progressTotals {
+  font-size: 1rem;
+  color: var(--text-dark);
+  opacity: 0.8;
+}
+
+.toggle-view-btn {
+  padding: 10px 20px;
+  border: 2px solid var(--accent-pink);
+  border-radius: 12px;
+  background: var(--white);
+  font-family: "Quicksand", sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 6px var(--shadow);
+}
+
+.toggle-view-btn:hover {
+  background: linear-gradient(
+    135deg,
+    var(--accent-pink) 0%,
+    var(--accent-blue) 100%
+  );
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 179, 193, 0.4);
+}
+
+.progress-bar {
+  width: 100%;
+  height: 40px;
+  background: rgba(93, 78, 96, 0.08);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  position: relative;
+  margin-bottom: 1.5rem;
+  box-shadow: inset 0 2px 4px var(--shadow);
+}
+
+.progress-reservado,
+.progress-comprado,
+.progress-disponivel  {
+  height: 100%;
+  transition: width 0.5s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--white);
+}
+
+.progress-reservado {
+  background: var(--warning);
+  color: var(--text-dark);
+}
+
+.progress-comprado {
+  background: var(--danger);
+}
+
+.progress-disponivel {
+  background: var(--success);
+}
+
+.progress-legend {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  padding: 8px 16px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.legend .color-indicator {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+.legend.comprado {
+  background: rgba(255, 179, 186, 0.1);
+  color: var(--danger);
+  border: 2px solid transparent;
+}
+
+.legend.comprado:hover {
+  background: rgba(255, 179, 186, 0.2);
+  border-color: var(--danger);
+}
+
+.legend.comprado .color-indicator {
+  background: var(--danger);
+}
+
+.legend.reservado {
+  background: rgba(255, 209, 154, 0.1);
+  color: var(--warning);
+  border: 2px solid transparent;
+}
+
+.legend.reservado:hover {
+  background: rgba(255, 209, 154, 0.2);
+  border-color: var(--warning);
+}
+
+.legend.reservado .color-indicator {
+  background: var(--warning);
+}
+
+.legend.disponivel {
+  background: rgba(159, 216, 164, 0.1);
+  color: var(--success);
+  border: 2px solid transparent;
+}
+
+.legend.disponivel:hover {
+  background: rgba(159, 216, 164, 0.2);
+  border-color: var(--success);
+}
+
+.legend.disponivel .color-indicator {
+  background: var(--success);
+}
+
+@media (max-width: 768px) {
+  .progress-container {
+    padding: 1.5rem;
+  }
+
+  .progress-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .toggle-view-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  #progressLabel {
+    font-size: 1.2rem;
+  }
+
+  .progress-legend {
+    gap: 1rem;
+  }
+
+  .legend {
+    font-size: 0.85rem;
+    padding: 6px 12px;
   }
 }
